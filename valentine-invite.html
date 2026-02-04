@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pacifico', cursive;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffecd2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 60px;
+            margin-bottom: 60px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-container {
+            position: relative;
+            min-height: 400px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Pacifico', cursive;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: absolute;
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+            color: white;
+            z-index: 10;
+            left: calc(50% - 150px);
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 105, 135, 0.5);
+        }
+
+        #noBtn {
+            background: white;
+            color: #ff6b9d;
+            transition: all 0.1s ease;
+            left: calc(50% + 50px);
+        }
+
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .celebration.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .celebration h2 {
+            font-size: 80px;
+            color: #ff6b9d;
+            margin-bottom: 30px;
+            animation: bounceIn 0.8s ease;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .celebration img {
+            max-width: 500px;
+            width: 90%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255, 105, 135, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 40px;
+            }
+            
+            button {
+                font-size: 20px;
+                padding: 15px 30px;
+            }
+            
+            .celebration h2 {
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Will You Be My Valentine?</h1>
+        
+        <div class="button-container">
+            <button id="yesBtn" onclick="sayYes()">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+        <h2>Yay! 🎉💕</h2>
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBmN2E4ZTk2YmRhZWY4YmVmZjBjYjE4YWI5OTNlYjM5NzY4YmFmZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/g5R9dok94mrIvplmZd/giphy.gif" alt="Celebration">
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const celebration = document.getElementById('celebration');
+        
+        let yesBtnSize = 24; // Initial font size in pixels
+        let escapeCount = 0;
+
+        noBtn.addEventListener('mouseover', function() {
+            escapeCount++;
+            
+            // Increase yes button size
+            yesBtnSize += 10;
+            yesBtn.style.fontSize = yesBtnSize + 'px';
+            yesBtn.style.padding = (20 + escapeCount * 5) + 'px ' + (40 + escapeCount * 10) + 'px';
+            
+            // Move no button to random position that doesn't overlap with yes button
+            const container = document.querySelector('.button-container');
+            const containerRect = container.getBoundingClientRect();
+            const yesRect = yesBtn.getBoundingClientRect();
+            const noRect = noBtn.getBoundingClientRect();
+            
+            let randomX, randomY;
+            let attempts = 0;
+            const maxAttempts = 50;
+            
+            // Keep trying to find a position that doesn't overlap
+            do {
+                randomX = Math.random() * (containerRect.width - 150) - (containerRect.width - 150) / 2;
+                randomY = Math.random() * (containerRect.height - 100) - (containerRect.height - 100) / 2;
+                
+                // Calculate what the new position would be
+                const newLeft = containerRect.width / 2 + randomX;
+                const newTop = containerRect.height / 2 + randomY;
+                const yesLeft = yesRect.left - containerRect.left;
+                const yesTop = yesRect.top - containerRect.top;
+                
+                // Check if it would overlap with yes button (with some padding)
+                const horizontalOverlap = Math.abs(newLeft - yesLeft) < (yesRect.width + noRect.width) / 2 + 30;
+                const verticalOverlap = Math.abs(newTop - yesTop) < (yesRect.height + noRect.height) / 2 + 30;
+                
+                attempts++;
+                
+                if ((!horizontalOverlap || !verticalOverlap) || attempts >= maxAttempts) {
+                    break;
+                }
+            } while (true);
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        });
+
+        function sayYes() {
+            celebration.classList.add('show');
+            
+            // Create confetti effect
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#ff8fab', '#ffd700', '#ff69b4', '#ffb3c6'];
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.zIndex = '999';
+                    confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 20);
+            }
+        }
+
+        // Add fall animation dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
